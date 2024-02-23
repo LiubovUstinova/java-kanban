@@ -21,16 +21,8 @@ public class Task {
         return taskName;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public int getNUMBER_ID() {
         return NUMBER_ID;
-    }
-
-    public Status getStatus() {
-        return status;
     }
 
     public void setTaskName(String taskName) {
@@ -41,8 +33,12 @@ public class Task {
         this.description = description;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public String getDescription() {
+        return description;
+    }
+
+    public ArrayList<SubTask> getSUB_TASKS() {
+        return SUB_TASKS;
     }
 
     public String addNewSubTask(String subTaskName, String subTaskDescription) {
@@ -63,10 +59,15 @@ public class Task {
         return "Error. SubTask not found;";
     }
 
-    public void showSubTasks() {
-        for (SubTask subTask : SUB_TASKS) {
-            System.out.println(subTask);
+    public SubTask removeOneSubTask(String subTaskName) {
+        for (int i = 0; i < SUB_TASKS.size(); i++) {
+            SubTask subTask = SUB_TASKS.get(i);
+            if (subTaskName.equals(subTask.getSubTaskName())) {
+                SUB_TASKS.remove(i);
+                return subTask;
+            }
         }
+        return null;
     }
 
     private String checkTaskStatusOnUpdate() {
@@ -82,11 +83,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "taskName='" + taskName + '\'' +
-                ", description='" + description + '\'' +
-                ", NUMBER_ID=" + NUMBER_ID +
-                ", status=" + status +
+        return "Задача{" +
+                " Имя: " + taskName + '\'' +
+                ", описание: " + description + '\'' +
+                ", NUMBER_ID = " + NUMBER_ID +
+                ", статус: " + status +
                 '}';
     }
 }

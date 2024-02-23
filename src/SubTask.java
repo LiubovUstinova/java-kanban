@@ -10,12 +10,12 @@ public class SubTask {
         this.subTaskDescription = subTaskDescription;
     }
 
-    public String getSubTaskDescription() {
-        return subTaskDescription;
-    }
-
     public void setSubTaskDescription(String subTaskDescription) {
         this.subTaskDescription = subTaskDescription;
+    }
+
+    public String getSubTaskDescription() {
+        return subTaskDescription;
     }
 
     public Status getSubTaskStatus() {
@@ -36,10 +36,10 @@ public class SubTask {
 
     @Override
     public String toString() {
-        return "SubTask{" +
-                ", subTaskName='" + subTaskName + '\'' +
-                ", subTaskDescription='" + subTaskDescription + '\'' +
-                "subTaskStatus=" + subTaskStatus +
+        return "Действие{" +
+                " Имя: " + subTaskName + '\'' +
+                ", описание: " + subTaskDescription + '\'' +
+                ", статус: " + subTaskStatus +
                 '}';
     }
 }
