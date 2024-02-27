@@ -8,6 +8,11 @@ public class Task {
     protected Integer id;
     protected Status status;
 
+    public Task(String taskName, String taskDescription) {
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -22,11 +27,6 @@ public class Task {
 
     public Status getStatus() {
         return status;
-    }
-
-    public Task(String taskName, String taskDescription) {
-        this.taskName = taskName;
-        this.taskDescription = taskDescription;
     }
 
     @Override

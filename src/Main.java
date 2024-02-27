@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         TaskManager taskManager = new TaskManager();
-        taskManager.preGenerateTasks();
+        preGenerateTasks(taskManager);
         Scanner scanner = new Scanner(System.in);
         System.out.println("Поехали!");
         while (true) {
@@ -39,7 +39,7 @@ public class Main {
                     String newTaskDescription = scanner.nextLine();
                     Task newTask = new Task(newTaskName, newTaskDescription);
 
-                    System.out.println("Создана новая задача: " + taskManager.saveOrUpdateTask(newTask));
+                    System.out.println("Создана новая задача: " + taskManager.saveNewTask(newTask));
                     System.out.println("*****");
                     break;
                 case 5:
@@ -49,7 +49,7 @@ public class Main {
                     String newEpicDescription = scanner.nextLine();
                     Epic newEpic = new Epic(newEpicName, newEpicDescription);
 
-                    System.out.println("Создана новая глобальная задача: " + taskManager.saveOrUpdateEpic(newEpic));
+                    System.out.println("Создана новая глобальная задача: " + taskManager.saveNewEpic(newEpic));
                     System.out.println("*****");
                     break;
                 case 6:
@@ -61,9 +61,11 @@ public class Main {
                     System.out.println("Введите описание нового действия:");
                     String newSubTaskDescription = scanner.nextLine();
                     SubTask newSubTask = new SubTask(newSubTaskName, newSubTaskDescription);
+                    newSubTask.setEpicId(epicIdToAddSubTask);
+                    newSubTask.setStatus(Status.NEW);
 
                     System.out.println("Создано новое действие: " +
-                            taskManager.saveNewSubTask(newSubTask, epicIdToAddSubTask));
+                            taskManager.saveNewSubTask(newSubTask));
                     System.out.println("*****");
                     break;
                 case 7:
@@ -97,7 +99,7 @@ public class Main {
                     taskToEdit.setId(taskIdToEdit);
                     taskToEdit.setStatus(taskToEditStatus);
 
-                    System.out.println("Задача обновлена:" + taskManager.saveOrUpdateTask(taskToEdit));
+                    System.out.println("Задача обновлена:" + taskManager.updateTask(taskToEdit));
                     System.out.println("*****");
                     break;
                 case 11:
@@ -111,7 +113,7 @@ public class Main {
                     Epic epicToEdit = new Epic(epicNewName, epicNewDescription);
                     epicToEdit.setId(epicIdToEdit);
 
-                    System.out.println("Глобальная задача обновлена:" + taskManager.saveOrUpdateEpic(epicToEdit));
+                    System.out.println("Глобальная задача обновлена:" + taskManager.updateEpic(epicToEdit));
                     System.out.println("*****");
                     break;
                 case 12:
@@ -256,6 +258,84 @@ public class Main {
         System.out.println("19 - очистить список глобальных задач (и действий);");
         System.out.println("20 - очистить список всех действий;");
         System.out.println("0 - Выйти из программы;");
+    }
+
+    private static void preGenerateTasks(TaskManager taskManager) {
+        Epic newEpic1 = new Epic("Иностранный язык", "Повысить уровень ин.яз.");
+        SubTask subTask1 = new SubTask("Речь", "Выполнить 1000 упражнений на произношение;");
+        SubTask subTask2 = new SubTask("Аудирование", "Выполнить 1000 упражнений на аудирование;");
+        SubTask subTask3 = new SubTask("Слова", "Пополнить словарный запас на 2000 новых слов;");
+        SubTask subTask4 = new SubTask("Чтение", "Прочитать 20 новых историй;");
+        taskManager.saveNewEpic(newEpic1);
+        subTask1.setEpicId(newEpic1.getId());
+        subTask1.setStatus(Status.NEW);
+        subTask2.setEpicId(newEpic1.getId());
+        subTask2.setStatus(Status.IN_PROGRESS);
+        subTask3.setEpicId(newEpic1.getId());
+        subTask3.setStatus(Status.NEW);
+        subTask4.setEpicId(newEpic1.getId());
+        subTask4.setStatus(Status.DONE);
+        taskManager.saveNewSubTask(subTask1);
+        taskManager.saveNewSubTask(subTask2);
+        taskManager.saveNewSubTask(subTask3);
+        taskManager.saveNewSubTask(subTask4);
+
+        Epic newEpic2 = new Epic("Иммунитет", "Повысить иммунитет");
+        SubTask subTask5 = new SubTask("Пробуждение", "Выпить стакан теплой воды;");
+        SubTask subTask6 = new SubTask("Разминка", "Ежедневно выполнять более 10 минут " +
+                "разминки после пробуждения;");
+        SubTask subTask7 = new SubTask("Физическая культура", "Еженедельно выполнять 3 тренировки:" +
+                "<силовая, кардио, растяжка> более 20 минут каждая;");
+        SubTask subTask8 = new SubTask("Прогулки", "Прогулки на свежем воздухе, " +
+                "стараться проходить более 5000 шагов в день;");
+        SubTask subTask9 = new SubTask("Есть овощи", "Ежедневно съедать не менее 100 грамм " +
+                "свежих овощей;");
+        SubTask subTask10 = new SubTask("Есть фрукты, ягоды", "Ежедневно съедать не менее 100 грамм " +
+                "свежих фруктов или ягод;");
+        taskManager.saveNewEpic(newEpic2);
+        subTask5.setEpicId(newEpic2.getId());
+        subTask5.setStatus(Status.NEW);
+        subTask6.setEpicId(newEpic2.getId());
+        subTask6.setStatus(Status.IN_PROGRESS);
+        subTask7.setEpicId(newEpic2.getId());
+        subTask7.setStatus(Status.NEW);
+        subTask8.setEpicId(newEpic2.getId());
+        subTask8.setStatus(Status.DONE);
+        subTask9.setEpicId(newEpic2.getId());
+        subTask9.setStatus(Status.DONE);
+        subTask10.setEpicId(newEpic2.getId());
+        subTask10.setStatus(Status.DONE);
+        taskManager.saveNewSubTask(subTask5);
+        taskManager.saveNewSubTask(subTask6);
+        taskManager.saveNewSubTask(subTask7);
+        taskManager.saveNewSubTask(subTask8);
+        taskManager.saveNewSubTask(subTask9);
+        taskManager.saveNewSubTask(subTask10);
+
+        Epic newEpic3 = new Epic("Кругозор", "Расшить знания в разных областях");
+        SubTask subTask11 = new SubTask("Литература", "Читать более 5 книг в год;");
+        SubTask subTask12 = new SubTask("Искусство", "Посещать более 2 выставок в год;");
+        SubTask subTask13 = new SubTask("Музыка", "Посещать более 2 концертов в год");
+        SubTask subTask14 = new SubTask("Наука", "Читать более 5 научных статей в год");
+        taskManager.saveNewEpic(newEpic3);
+        subTask11.setEpicId(newEpic3.getId());
+        subTask11.setStatus(Status.IN_PROGRESS);
+        subTask12.setEpicId(newEpic3.getId());
+        subTask12.setStatus(Status.IN_PROGRESS);
+        subTask13.setEpicId(newEpic3.getId());
+        subTask13.setStatus(Status.NEW);
+        subTask14.setEpicId(newEpic3.getId());
+        subTask14.setStatus(Status.NEW);
+        taskManager.saveNewSubTask(subTask11);
+        taskManager.saveNewSubTask(subTask12);
+        taskManager.saveNewSubTask(subTask13);
+        taskManager.saveNewSubTask(subTask14);
+
+        Task newTask1 = new Task("Выучить песню", "На иностранном языке");
+        Task newTask2 = new Task ("Погулять", "Будет хорошая погода");
+        taskManager.saveNewTask(newTask1);
+        taskManager.saveNewTask(newTask2);
+
     }
 
 }
