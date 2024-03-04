@@ -2,13 +2,14 @@ import managers.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
+import utils.Managers;
 import utils.Status;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefaultTaskManager();
         preGenerateTasks(taskManager);
         Scanner scanner = new Scanner(System.in);
         System.out.println("Поехали!");
@@ -83,7 +84,7 @@ public class Main {
                 case 9:
                     System.out.println("Введите номер действия для отображения:");
                     int subTaskToShow = scanner.nextInt();
-                    System.out.println(taskManager.getTask(subTaskToShow));
+                    System.out.println(taskManager.getSubTask(subTaskToShow));
                     System.out.println("*****");
                     break;
                 case 10:
@@ -219,6 +220,11 @@ public class Main {
                     System.out.println("Все действия для глобальных задач удалены.");
                     System.out.println("*****");
                     break;
+                case 21:
+                    System.out.println("Последние просмотренные задачи и действия:");
+                    System.out.println(taskManager.getHistory());
+                    System.out.println("*****");
+                    break;
                 case 0:
                     System.out.println("Вы вышли из программы Организатор задач.");
                     System.out.println("Желаем продуктивного дня,");
@@ -257,6 +263,7 @@ public class Main {
         System.out.println("18 - очистить список задач;");
         System.out.println("19 - очистить список глобальных задач (и действий);");
         System.out.println("20 - очистить список всех действий;");
+        System.out.println("21 - посмотреть историю последних просмотренных задач и действий;");
         System.out.println("0 - Выйти из программы;");
     }
 

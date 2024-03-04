@@ -8,29 +8,35 @@ import utils.Status;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TaskManager {
+public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> taskStorage;
     private final HashMap<Integer, Epic> epicStorage;
     private final HashMap<Integer, SubTask> subTaskStorage;
 
-    public TaskManager() {
+    private final HistoryManager historyManager;
+
+    public InMemoryTaskManager(HistoryManager historyManager) {
         taskStorage = new HashMap<>();
         epicStorage = new HashMap<>();
         subTaskStorage = new HashMap<>();
+        this.historyManager = historyManager;
     }
 
+    @Override
     public Task saveNewTask(Task task) {
         Integer id = IdGenerator.generateTaskId();
         task.setId(id);
         return taskStorage.put(id, task);
     }
 
+    @Override
     public Epic saveNewEpic(Epic epic) {
         Integer id = IdGenerator.generateTaskId();
         epic.setId(id);
         return epicStorage.put(id, epic);
     }
 
+    @Override
     public SubTask saveNewSubTask(SubTask subTask) {
         Integer id = IdGenerator.generateTaskId();
         subTask.setId(id);
@@ -41,25 +47,30 @@ public class TaskManager {
         return subTask;
     }
 
+    @Override
     public Task updateTask(Task task) {
         return taskStorage.put(task.getId(), task);
     }
 
+    @Override
     public Epic updateEpic(Epic epic) {
         epic.setStatus(epicStorage.get(epic.getId()).getStatus()); // user can't edit epic status
         return epicStorage.put(epic.getId(), epic);
     }
 
+    @Override
     public SubTask updateSubTask(SubTask subtask) {
         subTaskStorage.put(subtask.getId(), subtask);
         checkEpicStatus(subtask.getEpicId());
         return subtask;
     }
 
+    @Override
     public Task deleteTask(int id) {
         return taskStorage.remove(id);
     }
 
+    @Override
     public Epic deleteEpic(int id) {
         ArrayList<Integer> subTasksToRemoveList = epicStorage.get(id).getSubTasksId();
         for (Integer integer : subTasksToRemoveList) {
@@ -68,6 +79,7 @@ public class TaskManager {
         return epicStorage.remove(id);
     }
 
+    @Override
     public SubTask deleteSubTask(int id) {
         SubTask subTaskToDelete = subTaskStorage.get(id);
         int epicId = subTaskToDelete.getEpicId();
@@ -76,15 +88,18 @@ public class TaskManager {
         return subTaskStorage.remove(id);
     }
 
+    @Override
     public void deleteAllTasks() {
         taskStorage.clear();
     }
 
+    @Override
     public void deleteAllEpics() {
         epicStorage.clear();
         subTaskStorage.clear();
     }
 
+    @Override
     public void deleteAllSubTasks() {
         subTaskStorage.clear();
         for (Epic epic : epicStorage.values()) {
@@ -93,26 +108,38 @@ public class TaskManager {
         }
     }
 
+    @Override
     public Task getTask(int id) {
-        return taskStorage.get(id);
+        Task task = taskStorage.get(id);
+        updateHistory(task);
+        return task;
     }
 
+    @Override
     public Epic getEpic(int id) {
-        return epicStorage.get(id);
+        Epic epic = epicStorage.get(id);
+        updateHistory(epic);
+        return epic;
     }
 
+    @Override
     public SubTask getSubTask(int id) {
-        return subTaskStorage.get(id);
+        SubTask subTask = subTaskStorage.get(id);
+        updateHistory(subTask);
+        return subTask;
     }
 
+    @Override
     public ArrayList<Task> getAllTasks() {
         return new ArrayList<>(taskStorage.values());
     }
 
+    @Override
     public ArrayList<Epic> getAllEpics() {
         return new ArrayList<>(epicStorage.values());
     }
 
+    @Override
     public ArrayList<SubTask> getAllSubTasks(int epicId) {
         ArrayList<SubTask> subTaskList = new ArrayList<>();
         ArrayList<Integer> subTasksId = epicStorage.get(epicId).getSubTasksId();
@@ -122,17 +149,28 @@ public class TaskManager {
         return subTaskList;
     }
 
-    public Task setTaskStatus (int taskId, Status status) {
+    @Override
+    public Task setTaskStatus(int taskId, Status status) {
         Task taskInEditMode = taskStorage.get(taskId);
         taskInEditMode.setStatus(status);
         return taskInEditMode;
     }
 
-    public SubTask setSubTaskStatus (int subTaskId, Status status) {
+    @Override
+    public SubTask setSubTaskStatus(int subTaskId, Status status) {
         SubTask subTaskInEditMode = subTaskStorage.get(subTaskId);
         subTaskInEditMode.setStatus(status);
         checkEpicStatus(subTaskInEditMode.getEpicId());
         return subTaskInEditMode;
+    }
+
+    @Override
+    public ArrayList<Task> getHistory() {
+        return historyManager.getHistory();
+    }
+
+    private void updateHistory(Task task) {
+        historyManager.updateHistory(task);
     }
 
     private void checkEpicStatus(int epicId) {
@@ -154,4 +192,5 @@ public class TaskManager {
             if ((statusNew > 0 && statusDone > 0) || statusInProgress > 0) checkedEpic.setStatus(Status.IN_PROGRESS);
         }
     }
+
 }
