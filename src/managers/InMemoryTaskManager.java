@@ -7,11 +7,13 @@ import utils.IdGenerator;
 import utils.Status;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> taskStorage;
-    private final HashMap<Integer, Epic> epicStorage;
-    private final HashMap<Integer, SubTask> subTaskStorage;
+    private final Map<Integer, Task> taskStorage;
+    private final Map<Integer, Epic> epicStorage;
+    private final Map<Integer, SubTask> subTaskStorage;
 
     private final HistoryManager historyManager;
 
@@ -72,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic deleteEpic(int id) {
-        ArrayList<Integer> subTasksToRemoveList = epicStorage.get(id).getSubTasksId();
+        List<Integer> subTasksToRemoveList = epicStorage.get(id).getSubTasksId();
         for (Integer integer : subTasksToRemoveList) {
             subTaskStorage.remove(integer);
         }
@@ -130,19 +132,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getAllTasks() {
+    public List<Task> getAllTasks() {
         return new ArrayList<>(taskStorage.values());
     }
 
     @Override
-    public ArrayList<Epic> getAllEpics() {
+    public List<Epic> getAllEpics() {
         return new ArrayList<>(epicStorage.values());
     }
 
     @Override
-    public ArrayList<SubTask> getAllSubTasks(int epicId) {
-        ArrayList<SubTask> subTaskList = new ArrayList<>();
-        ArrayList<Integer> subTasksId = epicStorage.get(epicId).getSubTasksId();
+    public List<SubTask> getAllSubTasks(int epicId) {
+        List<SubTask> subTaskList = new ArrayList<>();
+        List<Integer> subTasksId = epicStorage.get(epicId).getSubTasksId();
         for (Integer integer : subTasksId) {
             subTaskList.add(subTaskStorage.get(integer));
         }
@@ -165,7 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
@@ -175,7 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void checkEpicStatus(int epicId) {
         Epic checkedEpic = epicStorage.get(epicId);
-        ArrayList<Integer> subTasksId = checkedEpic.getSubTasksId();
+        List<Integer> subTasksId = checkedEpic.getSubTasksId();
         int statusNew = 0;
         int statusInProgress = 0;
         int statusDone = 0;

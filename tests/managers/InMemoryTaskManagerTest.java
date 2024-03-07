@@ -16,11 +16,12 @@ class InMemoryTaskManagerTest {
     TaskManager taskManager = Managers.getDefaultTaskManager();
 
     @Test
-    void checkIfImpossibleToAddEpicAsSubTask() {
-        Epic epic1 = new Epic("1", "A");
-        taskManager.saveNewEpic(epic1);
-
-//        Assertions.assertThrows(Exception.class, taskManager.saveNewSubTask(epic1));
+    void checkIfIdIsOverwrittenWhenSavingNewTask() {
+        Task taskNotNew = new Task("OldTaskName", "OldTaskDesc");
+        int oldTaskId = 99999;
+        taskNotNew.setId(oldTaskId);
+        taskManager.saveNewTask(taskNotNew);
+        Assertions.assertNotEquals(oldTaskId, taskNotNew.getId());
     }
 
     @Test
@@ -38,9 +39,9 @@ class InMemoryTaskManagerTest {
         Epic epic1 = new Epic("3", "C");
         taskManager.saveNewEpic(epic1);
 
-        Task exctractedEpic = taskManager.getEpic(epic1.getId());
+        Task extractedEpic = taskManager.getEpic(epic1.getId());
 
-        Assertions.assertEquals(epic1, exctractedEpic);
+        Assertions.assertEquals(epic1, extractedEpic);
     }
 
     @Test

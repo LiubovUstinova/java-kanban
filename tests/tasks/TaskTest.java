@@ -5,11 +5,7 @@ import org.junit.jupiter.api.Test;
 import utils.Status;
 
 class TaskTest {
-    // prepare
 
-    //do
-
-    //check
     @Test
     void equals_checkIfTasksEqualById() {
         Task task1 = new Task("A", "B");
